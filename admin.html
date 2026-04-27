@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Startup Supernovas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       LOGIN
+       ═══════════════════════════════════════════ -->
+  <div id="login-view" class="login-wrap">
+    <div class="login-card">
+      <div class="login-star">★</div>
+      <h1>Panel de Admin</h1>
+      <p>Startup Supernovas · ULACIT</p>
+
+      <div class="form-group">
+        <label class="field-label">¿Quién eres?</label>
+        <select id="login-who">
+          <option value="">— Seleccionar —</option>
+          <!-- Se llena dinámicamente desde admin.js con los ADMINS de firebase-config.js -->
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">Contraseña</label>
+        <input type="password" id="login-pwd" placeholder="••••••••"
+               onkeydown="if(event.key==='Enter') doLogin()">
+      </div>
+
+      <button class="btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">
+        Ingresar →
+      </button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       APP (visible tras login)
+       ═══════════════════════════════════════════ -->
+  <div id="app-view" class="hidden">
+
+    <!-- NAV -->
+    <nav class="nav">
+      <div class="nav-brand"><span>★</span> Supernovas Admin</div>
+
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="overview">Inicio</button>
+        <button class="nav-tab" data-tab="comisiones">Comisiones</button>
+        <button class="nav-tab" data-tab="links">Links</button>
+        <button class="nav-tab" data-tab="seguimiento">Seguimiento</button>
+        <button class="nav-tab" data-tab="resultados">Resultados</button>
+      </div>
+
+      <div class="nav-right">
+        <span class="period-pill" id="nav-period-lbl"></span>
+        <span class="admin-pill"  id="nav-admin-lbl"></span>
+        <button class="btn-logout" onclick="logout()">Salir</button>
+      </div>
+    </nav>
+
+    <div class="page-wrap">
+
+      <!-- ─────────────────────────────────────────
+           PÁGINA: OVERVIEW
+           ───────────────────────────────────────── -->
+      <div class="page active" id="tab-overview">
+        <div style="margin-bottom:2rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div class="section-label">Panel de control</div>
+            <h1 style="font-size:26px;font-weight:800;letter-spacing:-.03em" id="ov-title">Startup Supernovas</h1>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-primary"    onclick="openNewPeriodModal()">+ Nuevo período</button>
+            <button class="btn-secondary"  id="btn-toggle-period" onclick="togglePeriod()">—</button>
+          </div>
+        </div>
+
+        <div id="no-period-msg" class="card" style="text-align:center;padding:2.5rem;color:var(--text2)">
+          No hay período activo. Crea uno con "+ Nuevo período".
+        </div>
+
+        <div id="period-overview" class="hidden">
+          <div class="grid3" style="margin-bottom:1.5rem">
+            <div class="metric"><div class="metric-val" id="ov-pct">—</div><div class="metric-label">Avance general</div></div>
+            <div class="metric"><div class="metric-val" id="ov-done">—</div><div class="metric-label">Evaluaciones enviadas</div></div>
+            <div class="metric"><div class="metric-val" id="ov-pending">—</div><div class="metric-label">Pendientes</div></div>
+          </div>
+
+          <div class="card" style="margin-bottom:1.5rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+              <div>
+                <div class="card-title" id="ov-period-name">—</div>
+                <div class="card-sub"   id="ov-deadline">—</div>
+              </div>
+              <div id="ov-status">—</div>
+            </div>
+          </div>
+
+          <div class="section-label">Progreso por comisión</div>
+          <div class="grid2" id="ov-comm-grid"></div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────
+           PÁGINA: COMISIONES
+           ───────────────────────────────────────── -->
+      <div class="page" id="tab-comisiones">
+        <div style="margin-bottom:2rem">
+          <div class="section-label">Gestión de comisiones</div>
+          <h2 style="font-size:22px;font-weight:800;letter-spacing:-.02em">Miembros por comisión</h2>
+        </div>
+        <div id="comm-list"></div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────
+           PÁGINA: LINKS
+           ───────────────────────────────────────── -->
+      <div class="page" id="tab-links">
+        <div style="margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div class="section-label">Links únicos</div>
+            <h2 style="font-size:22px;font-weight:800;letter-spacing:-.02em">Accesos por miembro</h2>
+          </div>
+          <div style="display:flex;gap:8px">
+            <select id="links-filter" onchange="renderLinksTab()" style="width:220px">
+              <option value="">Todas las comisiones</option>
+            </select>
+            <button class="btn-secondary" onclick="copyAllLinks()">Copiar todos</button>
+          </div>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden">
+          <table class="links-table">
+            <thead>
+              <tr>
+                <th>Miembro</th>
+                <th>Comisión</th>
+                <th>Progreso</th>
+                <th>Link</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="links-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────
+           PÁGINA: SEGUIMIENTO
+           ───────────────────────────────────────── -->
+      <div class="page" id="tab-seguimiento">
+        <div style="margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div class="section-label">Seguimiento en tiempo real</div>
+            <h2 style="font-size:22px;font-weight:800;letter-spacing:-.02em">¿Quién ha completado?</h2>
+          </div>
+          <select id="seg-filter" onchange="renderSeguimientoTab()" style="width:220px">
+            <option value="">Todas las comisiones</option>
+          </select>
+        </div>
+        <div id="seg-body"></div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────
+           PÁGINA: RESULTADOS
+           ───────────────────────────────────────── -->
+      <div class="page" id="tab-resultados">
+        <div style="margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div class="section-label">Resultados</div>
+            <h2 style="font-size:22px;font-weight:800;letter-spacing:-.02em">Evaluaciones recibidas</h2>
+          </div>
+          <div style="display:flex;gap:8px">
+            <select id="results-filter" onchange="renderResultsTab()">
+              <option value="">Todas las comisiones</option>
+            </select>
+            <button class="btn-secondary" onclick="window.print()">Imprimir / PDF</button>
+          </div>
+        </div>
+        <div id="results-body"></div>
+      </div>
+
+    </div><!-- /page-wrap -->
+  </div><!-- /app-view -->
+
+
+  <!-- ═══════════════════════════════════════════
+       MODALES
+       ═══════════════════════════════════════════ -->
+
+  <!-- Modal: Nuevo período -->
+  <div class="overlay hidden" id="modal-period">
+    <div class="modal">
+      <h3>Nuevo período de evaluación</h3>
+
+      <div class="form-group">
+        <label class="field-label">Período</label>
+        <select id="np-name">
+          <option>I Cuatrimestre 2025</option>
+          <option>II Cuatrimestre 2025</option>
+          <option>III Cuatrimestre 2025</option>
+          <option selected>I Cuatrimestre 2026</option>
+          <option>II Cuatrimestre 2026</option>
+          <option>III Cuatrimestre 2026</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">Fecha límite</label>
+        <input type="datetime-local" id="np-deadline">
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">URL base de la app</label>
+        <input type="text" id="np-baseurl" placeholder="https://tuusuario.github.io/supernovas-eval/index.html">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-primary"   onclick="createPeriod()">Crear período →</button>
+        <button class="btn-secondary" onclick="closeModal('modal-period')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar miembros de una comisión -->
+  <div class="overlay hidden" id="modal-members">
+    <div class="modal">
+      <h3 id="modal-members-title">Miembros</h3>
+
+      <div class="form-group">
+        <label class="field-label">Miembros (uno por línea, mínimo 2)</label>
+        <textarea id="modal-members-input" rows="9"
+          placeholder="Ej:&#10;Andy Vargas&#10;María Solís&#10;Carlos Mora&#10;Lucía Jiménez&#10;Pedro Ulate&#10;Sara Chaves"></textarea>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:.5rem">
+        Al guardar se generan automáticamente los links únicos para cada miembro nuevo.
+      </p>
+
+      <div class="modal-actions">
+        <button class="btn-primary"   onclick="saveMembers()">Guardar y generar links →</button>
+        <button class="btn-secondary" onclick="closeModal('modal-members')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de notificaciones -->
+  <div class="toast" id="toast"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS
+       ═══════════════════════════════════════════ -->
+  <script src="firebase-config.js"></script>
+  <script type="module" src="js/admin.js"></script>
+
+</body>
+</html>

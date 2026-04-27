@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluación · Startup Supernovas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <nav class="topbar">
+    <div class="topbar-brand">LOGO</div>
+    <div class="topbar-tag" id="topbar-period">ULACIT</div>
+  </nav>
+
+  <div class="container">
+
+    <!-- CARGANDO -->
+    <div id="view-loading" class="loading">
+      <div class="spinner"></div>
+      <p style="color:var(--text3);font-size:14px">Cargando tu evaluación…</p>
+    </div>
+
+    <!-- ERROR: link inválido -->
+    <div id="view-error" class="hidden">
+      <div class="message-card">
+        <div class="message-icon">🔒</div>
+        <h2>Link no válido</h2>
+        <p>Este link no existe o ya expiró.<br>Contacta a Andy para recibir un nuevo link.</p>
+      </div>
+    </div>
+
+    <!-- PERÍODO CERRADO -->
+    <div id="view-closed" class="hidden">
+      <div class="message-card">
+        <div class="message-icon">⏰</div>
+        <h2 id="closed-title">Período cerrado</h2>
+        <p id="closed-msg">El período de evaluación ha finalizado.</p>
+      </div>
+    </div>
+
+    <!-- EVALUACIÓN -->
+    <div id="view-eval" class="hidden">
+      <div class="welcome">
+        <div class="welcome-label">Bienvenido/a</div>
+        <div class="welcome-name" id="member-name">—</div>
+        <div class="welcome-sub" id="member-commission">—</div>
+      </div>
+
+      <div>
+        <span class="period-badge" id="period-label">—</span>
+        <span class="deadline-badge" id="deadline-label">—</span>
+      </div>
+
+      <!-- Progreso general -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="progress-title">Tu progreso</span>
+          <span class="progress-pct" id="prog-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+        </div>
+        <div class="progress-peers" id="prog-peers"></div>
+      </div>
+
+      <!-- Formulario (se llena dinámicamente) -->
+      <div id="eval-body"></div>
+    </div>
+
+    <!-- COMPLETADO -->
+    <div id="view-done" class="hidden">
+      <div class="done-card">
+        <div class="done-icon">✅</div>
+        <h2>¡Evaluación completada!</h2>
+        <p id="done-text">Has evaluado a todos tus compañeros. ¡Gracias!</p>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- Configuración compartida (comisiones, criterios, Firebase config) -->
+  <script src="firebase-config.js"></script>
+
+  <!-- Lógica de la página (módulo ES6 para usar Firebase imports) -->
+  <script type="module" src="js/index.js"></script>
+
+</body>
+</html>
