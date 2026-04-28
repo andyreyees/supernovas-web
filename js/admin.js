@@ -103,7 +103,7 @@ function updateNavPeriod() {
 }
 
 // ── CREAR PERÍODO ──────────────────────────────────────────────
-window.openNewPeriodModal = function () {
+  function openNewPeriodModal() {
   const d = new Date();
   d.setDate(d.getDate() + 14);
   document.getElementById("np-deadline").value = d.toISOString().slice(0, 16);
@@ -622,3 +622,4 @@ function toast(msg) {
   setTimeout(() => el.classList.remove("show"), 2500);
 }
 window.toast = toast;
+window.openNewPeriodModal = openNewPeriodModal;
