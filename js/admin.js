@@ -103,63 +103,27 @@ function updateNavPeriod() {
 }
 
 // ── CREAR PERÍODO ──────────────────────────────────────────────
-// ── CREAR PERÍODO ──────────────────────────────────────────────
-
-function openNewPeriodModal() {
+  function openNewPeriodModal() {
   const d = new Date();
   d.setDate(d.getDate() + 14);
-
-  document.getElementById("np-deadline").value =
-    d.toISOString().slice(0, 16);
-
-  document.getElementById("np-baseurl").value =
-    "https://supernovas-web.vercel.app/index.html";
-
-  // ESTA LÍNEA ES LA IMPORTANTE:
-  document.getElementById("modal-period").classList.remove("hidden");
-}
-
-// asegurar que el botón funcione bien con type="module"
-document.addEventListener("DOMContentLoaded", () => {
-  const btnNewPeriod = document.querySelector(".btn-primary");
-
-  if (btnNewPeriod) {
-    btnNewPeriod.addEventListener("click", openNewPeriodModal);
-  }
-});
+  document.getElementById("np-deadline").value = d.toISOString().slice(0, 16);
+  document.getElementById("np-baseurl").value ="https://supernovas-web.vercel.app/index.html";
+};
 
 window.createPeriod = async function () {
   const name     = document.getElementById("np-name").value;
   const deadline = document.getElementById("np-deadline").value;
   const bUrl     = document.getElementById("np-baseurl").value.trim();
+  if (!deadline) { alert("Elige una fecha límite"); return; }
+  if (!bUrl)     { alert("Ingresa la URL base");    return; }
 
-  if (!deadline) {
-    alert("Elige una fecha límite");
-    return;
-  }
-
-  if (!bUrl) {
-    alert("Ingresa la URL base");
-    return;
-  }
-
-  periodId = "period_" + Date.now();
-
+  periodId   = "period_" + Date.now();
   periodData = {
-    name,
-    deadline,
-    baseUrl: bUrl,
+    name, deadline, baseUrl: bUrl,
     open: true,
     createdAt: Date.now(),
     commissions: Object.fromEntries(
-      COMMISSIONS.map(c => [
-        c.id,
-        {
-          name: c.name,
-          color: c.color,
-          members: []
-        }
-      ])
+      COMMISSIONS.map(c => [c.id, { name: c.name, color: c.color, members: [] }])
     ),
   };
 
