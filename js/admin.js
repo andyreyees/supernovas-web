@@ -103,11 +103,12 @@ function updateNavPeriod() {
 }
 
 // ── CREAR PERÍODO ──────────────────────────────────────────────
-  function openNewPeriodModal() {
+window.openNewPeriodModal = function () {
   const d = new Date();
   d.setDate(d.getDate() + 14);
   document.getElementById("np-deadline").value = d.toISOString().slice(0, 16);
-  document.getElementById("np-baseurl").value ="https://supernovas-web.vercel.app/index.html";
+  document.getElementById("np-baseurl").value  = baseUrl || location.href.replace("admin.html", "index.html");
+  show("modal-period");
 };
 
 window.createPeriod = async function () {
@@ -622,4 +623,3 @@ function toast(msg) {
   setTimeout(() => el.classList.remove("show"), 2500);
 }
 window.toast = toast;
-window.openNewPeriodModal = openNewPeriodModal;
