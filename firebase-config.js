@@ -1,14 +1,18 @@
-// credenciales de Firebase
+// ═══════════════════════════════════════════════════════════════════════
+// firebase-config.js — Configuración compartida
+// ═══════════════════════════════════════════════════════════════════════
+
+// 🔥 Pega aquí tus credenciales de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyC-r3HNSAF4OK49jVxi5vClx-xZF-7xuxE",
-  authDomain: "supernovas-eval.firebaseapp.com",
-  projectId: "supernovas-eval",
-  storageBucket: "supernovas-eval.firebasestorage.app",
-  messagingSenderId: "1026752096736",
-  appId: "1:1026752096736:web:a5579aa906152e7a316385"
+  apiKey:            "TU_API_KEY_AQUI",
+  authDomain:        "TU_PROYECTO.firebaseapp.com",
+  projectId:         "TU_PROYECTO",
+  storageBucket:     "TU_PROYECTO.appspot.com",
+  messagingSenderId: "TU_SENDER_ID",
+  appId:             "TU_APP_ID"
 };
 
-// Los 3 admins — cambia nombres y contraseñas
+// 👥 Los 3 admins — cambia nombres y contraseñas
 const ADMINS = [
   { name: "Andy",    password: "andy2025"    },
   { name: "Admin 2", password: "admin2_2025" },
