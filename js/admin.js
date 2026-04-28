@@ -170,7 +170,6 @@ window.createPeriod = async function () {
   await loadAllData();
   toast("Período creado ✓");
 };
-window.openNewPeriodModal = openNewPeriodModal;
 
 // ── ABRIR / CERRAR PERÍODO ─────────────────────────────────────
 window.togglePeriod = async function () {
